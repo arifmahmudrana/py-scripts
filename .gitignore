@@ -1,0 +1,46 @@
+# Python
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# VSCode
+# .vscode/
+
+# macOS
+.DS_Store
+
+# Test, coverage, and reports
+htmlcov/
+.coverage
+.cache
+pytest_cache/
+
+# Environment files
+.env
+
+# Docker
+*.pid
+*.log
+db_data/
+
+# Misc
+*.sqlite3
+*.db
+*.bak
+*.swp
+*.swo
+
+# Ignore compiled files
+*.so
+
+# Ignore Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Ignore all cache
+**/__pycache__/
