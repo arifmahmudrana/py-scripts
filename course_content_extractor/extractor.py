@@ -74,11 +74,7 @@ class Extractor:
         title_tag = soup.find("title")
         course_title = title_tag.get_text().strip() if title_tag else None
 
-        if (
-            course_title is not None
-            and self.title_strip is not None
-            and self.title_strip in course_title
-        ):
+        if course_title and self.title_strip and self.title_strip in course_title:
             course_title = course_title.replace(self.title_strip, "")
 
         normalized_title = normalize_filename(course_title) if course_title else None
@@ -126,9 +122,9 @@ class Extractor:
             api_url, params={"components": components}, timeout=30
         )
         response.raise_for_status()
-        data: ApiResponse = response.json()
+        data = ApiResponse.model_validate(response.json())
 
-        return data.get("curriculum_context", {}).get("data", {}).get("sections", [])
+        return data.curriculum_context.data.sections
 
     def write_to_file(
         self,
@@ -143,9 +139,9 @@ class Extractor:
             sections (List[Section]): List of course sections to be written.
         """
         template = Template(DEFAULT_TEMPLATE)
-        context: Context = {"course": course_info, "sections": sections}
-        markdown_content = template.render(context)
-
+        markdown_content = template.render(
+            Context(course=course_info, sections=sections)
+        )
         output_filename = f"{course_info['normalized_title'] or 'course_content'}.md"
         with open(output_filename, "w", encoding="utf-8") as f:
             f.write(markdown_content)
