@@ -1,94 +1,80 @@
 """
 Type definitions for course curriculum extraction.
 
-This module defines the structured types used throughout the extractor,
-including course items, sections, curriculum data, and API responses.
-
-These types are primarily used to annotate and validate data retrieved
-from the course platform's API, as well as to structure the context
-passed to the Jinja2 templates for markdown generation.
+This module defines the structured Pydantic models used throughout the extractor.
+These models describe the shape of the curriculum API response and the context
+used for generating markdown content via Jinja2 templates.
 """
 
-from typing import List, Optional, TypedDict
+from typing import List, Optional
+from pydantic import BaseModel
 
 
-class Item(TypedDict):
+class Item(BaseModel):
     """
-    Represents an individual item in a section,
-    such as a lesson, video, or resource.
+    Represents a single item within a section.
 
     Attributes:
-        description (str): A brief description of the item.
-        title (str): The title of the item.
+        title (str): Title of the item (e.g., lecture title).
+        description (str): A brief description of the item content.
     """
 
-    description: str
     title: str
+    description: str
 
 
-class Section(TypedDict):
+class Section(BaseModel):
     """
-    Represents a section in the course curriculum,
-    which contains a list of items.
+    Represents a section of the course containing multiple items.
 
     Attributes:
         title (str): The title of the section.
-        items (List[Item]): A list of items that belong to this
-            section, such as lessons or videos.
+        items (List[Item]): A list of course items within the section.
     """
 
     title: str
     items: List[Item]
 
 
-class CurriculumContextData(TypedDict):
+class ApiResponse(BaseModel):
     """
-    Represents the structure of the curriculum context
-    that contains all sections.
+    Top-level response model for the course curriculum API.
 
-    Attributes:
-        sections (List[Section]): A list of sections in the curriculum.
-    """
-
-    sections: List[Section]
-
-
-class CurriculumContext(TypedDict):
-    """
-    Represents the main curriculum context,
-    which holds the curriculum data.
-
-    Attributes:
-        data (CurriculumContextData): The curriculum data,
-            including the sections.
+    This model nests the full structure returned by the API,
+    particularly focusing on the curriculum data.
     """
 
-    data: CurriculumContextData
+    class CurriculumContext(BaseModel):
+        """
+        Represents the 'curriculum_context' object within the API response.
 
+        Contains the actual curriculum data in the 'data' field.
+        """
 
-class ApiResponse(TypedDict):
-    """
-    Represents the structure of the API response
-    containing the curriculum context.
+        class Data(BaseModel):
+            """
+            Represents the 'data' object inside 'curriculum_context'.
 
-    Attributes:
-        curriculum_context (CurriculumContext): The curriculum context
-            data retrieved from the API.
-    """
+            Attributes:
+                sections (List[Section]): A list of course sections with their items.
+            """
+
+            sections: List[Section]
+
+        data: Data
 
     curriculum_context: CurriculumContext
 
 
-class Context(TypedDict):
+class Context(BaseModel):
     """
-    Represents the context passed to the template engine
-    for rendering the course content.
+    Represents the context object passed to the Jinja2 template
+    for rendering the markdown output.
 
     Attributes:
-        course (dict[str, Optional[str]]): Information about the course,
-            including its title and ID.
-        sections (List[Section]): A list of sections within the
-            course curriculum.
+        course (dict[str, Optional[str]]): Metadata about the course,
+            such as title, normalized title, and course ID.
+        sections (List[Section]): Structured course sections used in markdown generation.
     """
 
     course: dict[str, Optional[str]]
