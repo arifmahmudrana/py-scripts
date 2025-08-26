@@ -52,10 +52,10 @@ DEFAULT_TEMPLATE = """
 - {{ section.title }}
 
   {% if section.items %}
-    {% for item in section['items'] %}
+    {% for item in section.items %}
 
-    - {{ item['title'] }}
-    {{ item['description'] | replace('\n', '') }}
+    - {{ item.title }}
+    {{ item.description | replace('\n', '') }}
 
     {% endfor %}
   {% endif %}
