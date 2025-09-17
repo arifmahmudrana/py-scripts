@@ -1,0 +1,11 @@
+csv_file_path: "jobs.csv"
+email_timezone: "UTC"
+accounts:
+  personal: "LinkedInJobs"
+  work: "LinkedInJobs"
+keywords:
+  - xyz
+  - abc
+countries_or_regions:
+  - xyz
+  - abc

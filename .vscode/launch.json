@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug gmail_job_alerts",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "gmail_job_alerts",
+      "args": ["--config", "gmail_job_alerts/config.yaml"],
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

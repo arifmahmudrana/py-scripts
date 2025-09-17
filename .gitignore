@@ -44,3 +44,15 @@ db_data/
 
 # Ignore all cache
 **/__pycache__/
+
+**/credentials.json
+**/token_*.json
+
+# Ignore everything in html/ except .gitkeep
+job_details_scraper/html/*
+!job_details_scraper/html/.gitkeep
+
+# Ignore everything in text/ except .gitkeep
+job_details_scraper/text/*
+!job_details_scraper/text/.gitkeep
+**/config.yaml
