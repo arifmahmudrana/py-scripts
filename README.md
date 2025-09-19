@@ -20,23 +20,26 @@ python -m course_content_extractor \
 ---
 
 ### 📧 [`gmail_job_alerts`](./gmail_job_alerts)
-Automate the processing of LinkedIn job alert emails directly from Gmail.  
+Automate the processing of LinkedIn job alert emails directly from Gmail.
 This tool fetches unread job alert messages, extracts structured job information, and persists them for analysis.
 
 **Features:**
-- Authenticate with Gmail via OAuth2.
-- Fetch unread LinkedIn job alerts.
-- Extract job details: keywords, regions, job counts, dates, and job URLs.
-- Write structured job records to CSV.
-- Persist LinkedIn job URLs in a local SQLite database.
-- Mark processed messages as read and move them into a predefined Gmail label.
+
+* Authenticate with Gmail via OAuth2.
+* Fetch unread LinkedIn job alerts.
+* Extract job details: keywords, regions, job counts, dates, and job URLs.
+* Write structured job records to CSV.
+* Persist LinkedIn job URLs in a local SQLite database.
+* Mark processed messages as read and move them into a predefined Gmail label.
 
 **Usage:**
+
 ```bash
 python -m gmail_job_alerts --config gmail_job_alerts/config.yaml
 ```
 
 **Example config (`config.yaml`):**
+
 ```yaml
 csv_file_path: "jobs.csv"
 email_timezone: "UTC"
@@ -50,7 +53,48 @@ countries_or_regions:
 
 ---
 
+### 💼 [`job_details_scraper`](./job_details_scraper)
+
+Process LinkedIn job posting URLs stored in a local SQLite database and extract structured job details.
+This tool is typically run after `gmail_job_alerts`, which collects and stores job URLs.
+
+**Features:**
+
+* Reads job URLs from the database in configurable batch sizes.
+* Fetches LinkedIn job details with retry logic (handles transient failures).
+* Extracts structured fields:
+
+  * Title, company, summary
+  * Responsibilities, qualifications, benefits
+  * Seniority level, employment type, job functions, industries
+  * Compensation (if available)
+* Saves outputs to:
+
+  * `html/` → raw HTML snapshots
+  * `text/` → human-readable summaries
+* Deletes URLs from the database once processed.
+* Handles termination signals (`SIGINT`, `SIGTERM`) gracefully.
+
+**Usage:**
+
+```bash
+GJA_DB_PATH=./gmail_job_alerts/urls.db \
+GJA_LOG_PATH=./gmail_job_alerts/db_failures.log \
+python -m job_details_scraper
+```
+
+This will:
+
+1. Continuously fetch up to 5 URLs at a time from the database.
+2. For each URL, extract the job ID and call the scraper.
+3. Save results in `job_details_scraper/html/` and `job_details_scraper/txt/`.
+4. Delete processed URLs from the database.
+5. Exit when no URLs remain or the user presses `Ctrl+C`.
+
+---
+
 ## 🧰 Requirements
+
 * Python 3.12.3 or higher
 * Use `pip` to install dependencies
 
@@ -69,6 +113,7 @@ pip install -r requirements.txt
 ---
 
 ## 📁 Directory Structure
+
 ```
 py-scripts/
 │
@@ -89,6 +134,13 @@ py-scripts/
 │   ├── urls_db.py
 │   └── config.yaml (example)
 │
+├── job_details_scraper/        # LinkedIn job details scraper
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── job_url_processor.py
+│   ├── linkedin_scraper.py
+│   └── retry_utils.py
+│
 ├── .gitignore
 └── README.md
 ```
@@ -96,16 +148,19 @@ py-scripts/
 ---
 
 ## 📜 License
+
 This repository is licensed under the [BSD 3-Clause License](./LICENSE).
 
 ---
 
 ## ✨ Contributing
-Suggestions, improvements, and pull requests are welcome!  
+
+Suggestions, improvements, and pull requests are welcome!
 If you have your own useful script, feel free to contribute it as a module under this repo.
 
 ---
 
 ## 🙌 Acknowledgments
-Some tools may reference or be inspired by public platform structures (like Udemy or LinkedIn).  
+
+Some tools may reference or be inspired by public platform structures (like Udemy or LinkedIn).
 This repo is intended for **personal and educational** use only. Please respect the terms of service of any third-party platform you interact with.

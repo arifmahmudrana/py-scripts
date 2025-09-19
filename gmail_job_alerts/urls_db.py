@@ -56,9 +56,10 @@ import sqlite3
 import logging
 from pathlib import Path
 from typing import List, Generator
+import os
 
-DB_PATH = Path("./gmail_job_alerts/urls.db")
-LOG_PATH = Path("./gmail_job_alerts/db_failures.log")
+DB_PATH = Path(os.getenv("GJA_DB_PATH", "./gmail_job_alerts/urls.db"))
+LOG_PATH = Path(os.getenv("GJA_LOG_PATH", "./gmail_job_alerts/db_failures.log"))
 
 # Configure logging for retries
 logging.basicConfig(

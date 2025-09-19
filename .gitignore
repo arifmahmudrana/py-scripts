@@ -56,3 +56,7 @@ job_details_scraper/html/*
 job_details_scraper/text/*
 !job_details_scraper/text/.gitkeep
 **/config.yaml
+
+# Ignore sqlite open files for vscode extension
+**/*-shm
+**/*-wal
