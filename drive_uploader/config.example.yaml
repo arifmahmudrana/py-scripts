@@ -1,0 +1,9 @@
+jobs:
+  - target_path: "job-details/html"
+    local_pattern: "/Users/you/py-scripts/job_details_scraper/html/*.html"
+
+  - target_path: "reports/csv"
+    local_pattern: "/Users/you/data/*.csv"
+
+credentials_file_path: "credentials.json"
+token_file_path: "token.json"
