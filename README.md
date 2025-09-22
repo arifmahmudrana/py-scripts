@@ -93,6 +93,49 @@ This will:
 
 ---
 
+### 📂 `drive_uploader`
+
+A command-line utility to upload local files to Google Drive with support for nested folder creation and automatic cleanup.  
+It reads a YAML configuration file containing multiple upload jobs, each specifying a local file pattern and a target Drive path.
+
+**Features:**
+- Authenticate with Google Drive using OAuth2.
+- Ensure nested folder paths exist (like `mkdir -p`).
+- Upload files matching glob patterns (e.g. `*.html`, `**/*.csv`).
+- Optionally delete local files after upload.
+- Configure multiple jobs via a single YAML file.
+
+**Usage:**
+```bash
+python -m drive_uploader --config drive_uploader/config.yaml
+```
+
+**Example config:**
+```yaml
+jobs:
+  - target_path: "job-details/html"
+    local_pattern: "/path/to/html/*.html"
+
+  - target_path: "reports/csv"
+    local_pattern: "/path/to/reports/**/*.csv"
+
+credentials_file_path: "credentials.json"
+token_file_path: "token.json"
+```
+
+**Importable API:**
+```python
+from drive_uploader import get_service, ensure_path, upload_files
+
+service = get_service()
+folder_id = ensure_path(service, "my-folder")
+upload_files(service, folder_id, "./*.txt")
+```
+
+This module is useful for automating file uploads to Google Drive from local scripts or pipelines. It can be run as a standalone CLI tool or integrated into other Python projects.
+
+---
+
 ## 🧰 Requirements
 
 * Python 3.12.3 or higher

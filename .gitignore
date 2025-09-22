@@ -46,7 +46,7 @@ db_data/
 **/__pycache__/
 
 **/credentials.json
-**/token_*.json
+**/token*.json
 
 # Ignore everything in html/ except .gitkeep
 job_details_scraper/html/*
