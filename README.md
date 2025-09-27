@@ -167,6 +167,38 @@ This will produce `merged_output.txt` with:
 
 ---
 
+### 🗃️ [`file_merger_batch`](./file_merger_batch)
+A companion tool to `file_merger` that merges files in **batches** using a glob pattern.  
+Instead of listing files manually, you provide a pattern (e.g. `a/*.txt`) and a **chunk size**. The tool groups files into chunks and calls `merge_files_with_formatting` for each batch, producing multiple merged outputs.  
+🔗 [Project Documentation](./file_merger_batch/README.md)
+
+**Example config (`config.yml`):**
+
+```yaml
+files: "a/*.txt"
+prefix: "---START---\n"
+join: "\n---NEXT FILE---\n"
+suffix: "\n---END---\n"
+final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
+output_path: "b/c/"
+output_file_name_pattern: "abc[batch].txt"
+chunk_size: 5
+```
+
+**Usage:**
+
+```bash
+python -m file_merger_batch -c config.yml
+```
+
+This will:
+- Expand the glob pattern (`a/*.txt`)
+- Split files into chunks of 5
+- Merge each chunk into a separate file (`b/c/abc1.txt`, `b/c/abc2.txt`, …)
+- Apply prefix, join, suffix, and final_append formatting
+
+---
+
 ## 🧰 Requirements
 
 * Python 3.12.3 or higher
@@ -231,6 +263,13 @@ py-scripts/
 │   ├── __init__.py
 │   ├── __main__.py
 │   ├── merger.py
+│   ├── config.example.yml
+│   └── README.md
+│
+├── file_merger_batch/   # Merge files batch
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── batch_merger.py
 │   ├── config.example.yml
 │   └── README.md
 │
