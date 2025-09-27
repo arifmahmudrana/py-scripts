@@ -1,0 +1,5 @@
+prefix: "---START---\n"
+join: "\n---NEXT FILE---\n"
+suffix: "\n---END---\n"
+final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
+output_path: "merged_output.txt"

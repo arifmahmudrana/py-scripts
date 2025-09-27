@@ -136,6 +136,37 @@ This module is useful for automating file uploads to Google Drive from local scr
 
 ---
 
+### 🗂️ [`file_merger`](./file_merger)
+
+A lightweight Python package/CLI tool to merge multiple files into one, with configurable **prefix**, **join string**, **suffix**, and a **final string appended once at the end**.  
+Configuration is provided via a YAML file, while file paths are passed as command-line arguments.  
+🔗 [Project Documentation](./file_merger/README.md)
+
+**Usage:**
+
+1. Create a `config.yml` file:
+
+```yaml
+prefix: "---START---\n"
+join: "\n---NEXT FILE---\n"
+suffix: "\n---END---\n"
+final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
+output_path: "merged_output.txt"
+```
+
+2. Run the tool:
+
+```bash
+python -m file_merger -c config.yml file1.txt file2.txt file3.txt
+```
+
+This will produce `merged_output.txt` with:
+- Each file wrapped in `prefix` and `suffix`
+- Files separated by `join`
+- A final string (`final_append`) appended once at the very end
+
+---
+
 ## 🧰 Requirements
 
 * Python 3.12.3 or higher
@@ -175,14 +206,33 @@ py-scripts/
 │   ├── utils.py
 │   ├── jobs_writer.py
 │   ├── urls_db.py
-│   └── config.yaml (example)
+│   ├── README.md
+│   └── config.example.yaml (example)
 │
 ├── job_details_scraper/        # LinkedIn job details scraper
 │   ├── __init__.py
 │   ├── __main__.py
 │   ├── job_url_processor.py
 │   ├── linkedin_scraper.py
+│   ├── README.md
 │   └── retry_utils.py
+│
+├── drive_uploader/        # Drive Uploader(Google for now)
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── auth.py
+│   ├── drive_ops.py
+│   ├── uploader.py
+│   ├── utils.py
+│   ├── README.md
+│   └── config.example.yaml
+│
+├── file_merger/        # Merge files into one
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── merger.py
+│   ├── config.example.yml
+│   └── README.md
 │
 ├── .gitignore
 └── README.md

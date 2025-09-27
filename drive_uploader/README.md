@@ -21,7 +21,7 @@ drive_uploader/
 ├── drive_ops.py         # Folder creation and lookup utilities
 ├── uploader.py          # File upload and cleanup logic
 ├── utils.py             # Config loader and helpers
-└── config.example.yaml          # Example configuration file
+└── config.example.yaml  # Example configuration file
 ```
 
 ---
