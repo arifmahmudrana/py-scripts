@@ -199,6 +199,34 @@ This will:
 
 ---
 
+### 🔗 [`url_extractor`](./url_extractor)
+Extract URLs from a file, filter by domain, and save results into a file. Supports removing duplicate with original order.  
+🔗 [Project Documentation](./url_extractor/README.md)
+
+**Example config (`config.yml`):**
+
+```yaml
+# config.yaml
+input_text_file: "/path/to/source.txt"        # path to the text file to scan
+output_file: "/path/to/output_urls.txt"       # where to write extracted URLs
+domain_filter: "www.udemy.com"                # domain to keep (exact or substring)
+unique_only: true                             # true => write only unique URLs
+```
+
+**Usage:**
+
+```bash
+python -m url_extractor -c config.yml
+```
+
+This will:
+- Read the file `/path/to/source.txt` and extract http/https URLs
+- Filter URLs by `www.udemy.com` (substring match)
+- Finds unique URLs (preserves original order)
+- Writes URLs to `/path/to/output_urls.txt`
+
+---
+
 ## 🧰 Requirements
 
 * Python 3.12.3 or higher
@@ -270,6 +298,14 @@ py-scripts/
 │   ├── __init__.py
 │   ├── __main__.py
 │   ├── batch_merger.py
+│   ├── config.example.yml
+│   └── README.md
+│
+├── url_extractor/   # Extract URLs from file
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── cli.py
+│   ├── core.py
 │   ├── config.example.yml
 │   └── README.md
 │

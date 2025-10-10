@@ -1,0 +1,5 @@
+# config.yaml
+input_text_file: "/path/to/source.txt"        # path to the text file to scan
+output_file: "/path/to/output_urls.txt"       # where to write extracted URLs
+domain_filter: "www.udemy.com"                # domain to keep (exact or substring)
+unique_only: true                             # true => write only unique URLs

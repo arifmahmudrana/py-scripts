@@ -67,3 +67,5 @@ file_merger_batch/files/*
 
 **/*.y*ml
 !**/config.example.y*ml
+
+url_extractor/*.txt
