@@ -12,6 +12,7 @@ import yaml
 
 def merge_files_with_formatting(
     *files: List[str],
+    first_prepend: str = "",
     prefix: str = "",
     join: str = "\n",
     suffix: str = "",
@@ -24,6 +25,7 @@ def merge_files_with_formatting(
 
     Parameters:
         *files (str): Variable number of file paths to read from.
+        first_prepend (str): String to prepended before any file's content.
         prefix (str): String to prepend before each file's content.
         join (str): String to insert between file contents.
         suffix (str): String to append after each file's content.
@@ -37,7 +39,11 @@ def merge_files_with_formatting(
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     with output_file.open("w", encoding="utf-8") as out:
+        # Prepend the initial string if provided
+        if first_prepend:
+            out.write(first_prepend)
         for idx, file in enumerate(files):
+
             with open(file, "r", encoding="utf-8") as f:
                 # Write prefix before file content
                 out.write(prefix)
@@ -60,7 +66,7 @@ def merge_files_with_formatting(
 
 def load_config(config_path: str):
     """
-    Load YAML configuration for prefix, join, suffix, final_append, and output_path.
+    Load YAML configuration for first_prepend, prefix, join, suffix, final_append, and output_path.
 
     Parameters:
         config_path (str): Path to the YAML config file.

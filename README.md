@@ -147,6 +147,7 @@ Configuration is provided via a YAML file, while file paths are passed as comman
 1. Create a `config.yml` file:
 
 ```yaml
+first_prepend: "---AT THE BEGINNING---\n"
 prefix: "---START---\n"
 join: "\n---NEXT FILE---\n"
 suffix: "\n---END---\n"
@@ -161,6 +162,7 @@ python -m file_merger -c config.yml file1.txt file2.txt file3.txt
 ```
 
 This will produce `merged_output.txt` with:
+- A string (`first_prepend`) appended once at the very beginning
 - Each file wrapped in `prefix` and `suffix`
 - Files separated by `join`
 - A final string (`final_append`) appended once at the very end
@@ -176,6 +178,7 @@ Instead of listing files manually, you provide a pattern (e.g. `a/*.txt`) and a 
 
 ```yaml
 files: "a/*.txt"
+first_prepend: "---AT THE BEGINNING---\n"
 prefix: "---START---\n"
 join: "\n---NEXT FILE---\n"
 suffix: "\n---END---\n"
@@ -195,7 +198,7 @@ This will:
 - Expand the glob pattern (`a/*.txt`)
 - Split files into chunks of 5
 - Merge each chunk into a separate file (`b/c/abc1.txt`, `b/c/abc2.txt`, …)
-- Apply prefix, join, suffix, and final_append formatting
+- Apply first_prepend, prefix, join, suffix, and final_append formatting
 
 ---
 

@@ -24,6 +24,7 @@ file_merger/
 1. Create a `config.yml` file:
 
 ```yaml
+first_prepend: "---AT THE BEGINNING---\n"
 prefix: "---START---\n"
 join: "\n---NEXT FILE---\n"
 suffix: "\n---END---\n"
@@ -38,6 +39,7 @@ python -m file_merger -c config.yml file1.txt file2.txt file3.txt
 ```
 
 This will produce `merged_output.txt` with:
+- A string (`first_prepend`) appended once at the very beginning
 - Each file wrapped in `prefix` and `suffix`
 - Files separated by `join`
 - A final string (`final_append`) appended once at the very end

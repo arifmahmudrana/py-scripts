@@ -17,7 +17,7 @@ def main():
         "-c",
         "--config",
         required=True,
-        help="Path to YAML config file (prefix, join, suffix, final_append, output_path).",
+        help="Path to YAML config file (first_prepend, prefix, join, suffix, final_append, output_path).",
     )
     parser.add_argument("files", nargs="+", help="List of input files to merge.")
 
@@ -29,6 +29,7 @@ def main():
     # Merge files
     merge_files_with_formatting(
         *args.files,
+        first_prepend=config.get("first_prepend", ""),
         prefix=config.get("prefix", ""),
         join=config.get("join", "\n"),
         suffix=config.get("suffix", ""),

@@ -1,3 +1,4 @@
+first_prepend: "---AT THE BEGINNING---\n"
 prefix: "---START---\n"
 join: "\n---NEXT FILE---\n"
 suffix: "\n---END---\n"

@@ -19,6 +19,7 @@ def merge_files_in_batches(config_path: str):
 
     YAML Config Example:
         files: "a/*.txt"
+        first_prepend: "---AT THE BEGINNING---\n"
         prefix: "---START---\n"
         join: "\n---NEXT FILE---\n"
         suffix: "\n---END---\n"
@@ -32,6 +33,7 @@ def merge_files_in_batches(config_path: str):
         config = yaml.safe_load(f)
 
     files_pattern = config["files"]
+    first_prepend = config.get("first_prepend", "")
     prefix = config.get("prefix", "")
     join = config.get("join", "\n")
     suffix = config.get("suffix", "")
@@ -62,6 +64,7 @@ def merge_files_in_batches(config_path: str):
 
         merge_files_with_formatting(
             *chunk,
+            first_prepend=first_prepend,
             prefix=prefix,
             join=join,
             suffix=suffix,

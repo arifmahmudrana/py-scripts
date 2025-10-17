@@ -25,6 +25,7 @@ file_merger_batch/
 
 ```yaml
 files: "a/*.txt"                       # Glob pattern to match input files
+first_prepend: "---AT THE BEGINNING---\n"  # Prepended once at the beginning
 prefix: "---START---\n"                # Prefix before each file's content
 join: "\n---NEXT FILE---\n"            # Separator between files
 suffix: "\n---END---\n"                # Suffix after each file's content
@@ -45,7 +46,7 @@ This will:
 - Split the files into chunks of 5
 - Merge each chunk into a separate file
 - Save outputs as `b/c/abc1.txt`, `b/c/abc2.txt`, etc.
-- Apply prefix, join, suffix, and final_append formatting
+- Apply first_prepend, prefix, join, suffix, and final_append formatting
 
 ---
 
@@ -54,7 +55,7 @@ This will:
 - Accepts **glob patterns** for flexible file selection.
 - Splits files into **configurable batch sizes**.
 - Uses the proven `merge_files_with_formatting` function from `file_merger`.
-- Configurable formatting via YAML (`prefix`, `join`, `suffix`, `final_append`).
+- Configurable formatting via YAML (`first_prepend`, `prefix`, `join`, `suffix`, `final_append`).
 - Generates **multiple output files** with customizable naming patterns.
 - Efficient streaming (handles large files line by line).
 
