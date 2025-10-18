@@ -171,21 +171,34 @@ This will produce `merged_output.txt` with:
 
 ### 🗃️ [`file_merger_batch`](./file_merger_batch)
 A companion tool to `file_merger` that merges files in **batches** using a glob pattern.  
-Instead of listing files manually, you provide a pattern (e.g. `a/*.txt`) and a **chunk size**. The tool groups files into chunks and calls `merge_files_with_formatting` for each batch, producing multiple merged outputs.  
+Instead of listing files manually, you provide a pattern (e.g. `a/*.txt`) and configure two processing groups:
+1. **First file(s)**: Process the first N files separately with custom formatting
+2. **Rest files**: Process remaining files in batches with a different configuration
+
 🔗 [Project Documentation](./file_merger_batch/README.md)
 
 **Example config (`config.yml`):**
 
 ```yaml
 files: "a/*.txt"
-first_prepend: "---AT THE BEGINNING---\n"
-prefix: "---START---\n"
-join: "\n---NEXT FILE---\n"
-suffix: "\n---END---\n"
-final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
-output_path: "b/c/"
-output_file_name_pattern: "abc[batch].txt"
-chunk_size: 5
+first_file:
+  first_prepend: "---AT THE BEGINNING---\n"
+  prefix: "---START---\n"
+  join: "\n---NEXT FILE---\n"
+  suffix: "\n---END---\n"
+  final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
+  output_path: "b/c/"
+  output_file_name_pattern: "abc.txt"
+  size: 5
+rest_files:
+  first_prepend: "---AT THE BEGINNING---\n"
+  prefix: "---START---\n"
+  join: "\n---NEXT FILE---\n"
+  suffix: "\n---END---\n"
+  final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
+  output_path: "b/c/"
+  output_file_name_pattern: "abc[batch].txt"
+  chunk_size: 5
 ```
 
 **Usage:**
@@ -196,9 +209,10 @@ python -m file_merger_batch -c config.yml
 
 This will:
 - Expand the glob pattern (`a/*.txt`)
-- Split files into chunks of 5
-- Merge each chunk into a separate file (`b/c/abc1.txt`, `b/c/abc2.txt`, …)
-- Apply first_prepend, prefix, join, suffix, and final_append formatting
+- Process the first 5 files into `b/c/abc.txt` using `first_file` configuration
+- Split remaining files into chunks of 5
+- Merge each chunk into separate files (`b/c/abc1.txt`, `b/c/abc2.txt`, …) using `rest_files` configuration
+- Apply respective formatting for each group
 
 ---
 

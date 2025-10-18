@@ -1,9 +1,19 @@
 files: "a/*.txt"
-first_prepend: "---AT THE BEGINNING---\n"
-prefix: "---START---\n"
-join: "\n---NEXT FILE---\n"
-suffix: "\n---END---\n"
-final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
-output_path: "b/c/"
-output_file_name_pattern: "abc[batch].txt"
-chunk_size: 5
+first_file:
+  first_prepend: "---AT THE BEGINNING---\n"
+  prefix: "---START---\n"
+  join: "\n---NEXT FILE---\n"
+  suffix: "\n---END---\n"
+  final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
+  output_path: "b/c/"
+  output_file_name: "abc.txt"
+  size: 5
+rest_files:
+  first_prepend: "---AT THE BEGINNING---\n"
+  prefix: "---START---\n"
+  join: "\n---NEXT FILE---\n"
+  suffix: "\n---END---\n"
+  final_append: "\n=== ALL FILES MERGED SUCCESSFULLY ===\n"
+  output_path: "b/c/"
+  output_file_name_pattern: "abc[batch].txt"
+  chunk_size: 5
