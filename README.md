@@ -244,6 +244,63 @@ This will:
 
 ---
 
+### 🔧 [`yaml_setter`](./yaml_setter)
+
+A simple Python utility to set values in YAML files using dot notation paths with array index support.  
+Read content from any file and insert it at a specific path in a YAML file, creating nested structures automatically.  
+🔗 [Project Documentation](./yaml_setter/README.md)
+
+**Features:**
+- Set values using dot notation (e.g., `a.b.c`)
+- Support for array indices (e.g., `users[0].name`)
+- Support for multi-dimensional arrays (e.g., `matrix[0][7]`)
+- Automatically creates missing directories and nested structures
+- Preserves existing YAML content
+- Clean YAML formatting
+
+**Usage:**
+
+```bash
+# Simple nested path
+python -m yaml_setter data.txt config.yaml "database.connection.host"
+
+# Array index
+python -m yaml_setter message.txt config.yaml "notifications[0].message"
+
+# Multi-dimensional array
+python -m yaml_setter content.md config.yaml "matrix[2][5].data"
+
+# Complex nested structure
+python -m yaml_setter readme.md config.yaml "docs.api[0].examples[3].code"
+```
+
+**As a Library:**
+
+```python
+from yaml_setter import set_yaml_value
+
+# Set a simple value
+set_yaml_value("config.yaml", "app.name", "My Application")
+
+# Set value with array index
+set_yaml_value("config.yaml", "users[0].email", "user@example.com")
+
+# Set value in multi-dimensional array
+content = "Hello World"
+set_yaml_value("data.yaml", "grid[5][10]", content)
+```
+
+**Path Syntax Examples:**
+```
+a.b.c           →  {a: {b: {c: value}}}
+a.b[0]          →  {a: {b: [value]}}
+a[0].b          →  {a: [{b: value}]}
+a[0][1]         →  {a: [[null, value]]}
+users[0].name   →  {users: [{name: value}]}
+```
+
+---
+
 ## 🧰 Requirements
 
 * Python 3.12.3 or higher
@@ -324,6 +381,12 @@ py-scripts/
 │   ├── cli.py
 │   ├── core.py
 │   ├── config.example.yml
+│   └── README.md
+│
+├── yaml_setter/   # Set values in YAML files
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── yaml_setter.py
 │   └── README.md
 │
 ├── .gitignore
