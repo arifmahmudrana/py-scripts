@@ -5,13 +5,14 @@ Functions:
 - load_yaml_config(path)
 - extract_urls_from_text(text)
 - filter_urls_by_domain(urls, domain_filter)
+- get_unique_urls(urls)
 - write_urls_to_file(urls, dest_path, unique=True)
 """
 
 from typing import Iterable, List, Set
 import re
-import yaml
 from pathlib import Path
+import yaml
 
 # Simple regex to capture typical URLs (http/https)
 URL_REGEX = re.compile(
@@ -63,6 +64,31 @@ def filter_urls_by_domain(urls: Iterable[str], domain_filter: str) -> List[str]:
     return [u for u in urls if df_lower in u.lower()]
 
 
+def get_unique_urls(urls: Iterable[str]) -> List[str]:
+    """
+    Return unique URLs preserving original order.
+
+    Args:
+        urls: Iterable of URL strings
+
+    Returns:
+        List of unique URLs in original order
+
+    Example:
+        >>> urls = ["https://a.com", "https://b.com", "https://a.com"]
+        >>> get_unique_urls(urls)
+        ['https://a.com', 'https://b.com']
+    """
+    seen: Set[str] = set()
+    unique_urls: List[str] = []
+    for u in urls:
+        if u not in seen:
+            seen.add(u)
+            unique_urls.append(u)
+
+    return unique_urls
+
+
 def write_urls_to_file(
     urls: Iterable[str], dest_path: str, unique: bool = True
 ) -> None:
@@ -74,13 +100,7 @@ def write_urls_to_file(
     p.parent.mkdir(parents=True, exist_ok=True)
 
     if unique:
-        seen: Set[str] = set()
-        ordered_unique: List[str] = []
-        for u in urls:
-            if u not in seen:
-                seen.add(u)
-                ordered_unique.append(u)
-        final_list = ordered_unique
+        final_list = get_unique_urls(urls)
     else:
         final_list = list(urls)
 

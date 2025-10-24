@@ -10,7 +10,6 @@ Functions:
 - process_urls_to_db(config_path): Main processing function
 """
 
-from typing import List
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse
 import yaml
@@ -19,6 +18,7 @@ import yaml
 from url_extractor.core import (
     extract_urls_from_file,
     filter_urls_by_domain,
+    get_unique_urls,
 )
 
 # Import from gmail_job_alerts
@@ -114,13 +114,7 @@ def process_urls_to_db(config_path: str) -> int:
 
     # Remove duplicates if requested (preserve order)
     if cfg["unique_only"]:
-        seen = set()
-        unique_urls: List[str] = []
-        for u in urls:
-            if u not in seen:
-                seen.add(u)
-                unique_urls.append(u)
-        urls = unique_urls
+        urls = get_unique_urls(urls)
         print(f"Kept {len(urls)} unique URLs")
 
     # Write to database
