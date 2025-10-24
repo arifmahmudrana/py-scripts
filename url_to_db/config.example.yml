@@ -1,0 +1,13 @@
+# Input text file containing URLs
+input_text_file: "url_extractor/source.txt"
+
+# Domain to filter URLs (substring match, case-insensitive)
+# Examples: "udemy.com", "www.udemy.com", "linkedin.com"
+domain_filter: "www.udemy.com"
+
+# Strip query parameters from URLs before processing
+# Example: "https://example.com/page?foo=bar" becomes "https://example.com/page"
+strip_query_params: true
+
+# Only process unique URLs (preserves original order)
+unique_only: true

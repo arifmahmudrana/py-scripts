@@ -301,6 +301,65 @@ users[0].name   →  {users: [{name: value}]}
 
 ---
 
+### 🔗➡️💾 [`url_to_db`](./url_to_db)
+Extract URLs from a text file and write them directly to the SQLite database.  
+This module combines `url_extractor` functionality with `gmail_job_alerts` database operations.  
+🔗 [Project Documentation](./url_to_db/README.md)
+
+**Features:**
+- Extract URLs from text files
+- Filter by domain (substring match)
+- Optionally strip query parameters (useful for deduplicating URLs with different tracking codes)
+- Remove duplicates while preserving order
+- Write directly to SQLite database
+
+**Example config (`config.yml`):**
+
+```yaml
+input_text_file: "url_extractor/source.txt"
+domain_filter: "www.udemy.com"
+strip_query_params: true    # Remove ?foo=bar from URLs
+unique_only: true
+```
+
+**Usage:**
+
+```bash
+python -m url_to_db -c config.yml
+```
+
+This will:
+- Read the file and extract http/https URLs
+- Filter URLs by `www.udemy.com` (substring match)
+- Strip query parameters (e.g., `?couponCode=ABC123`)
+- Keep only unique URLs (preserves original order)
+- Write URLs directly to the SQLite database (`gmail_job_alerts/urls.db`)
+
+**Example:**
+```
+Input URLs:
+  https://www.udemy.com/course/python/?couponCode=ABC123
+  https://www.udemy.com/course/python/?couponCode=XYZ789
+  https://www.udemy.com/course/web-dev/
+
+After processing (with strip_query_params: true):
+  https://www.udemy.com/course/python/
+  https://www.udemy.com/course/web-dev/
+```
+
+**As a library:**
+
+```python
+from url_to_db.core import process_urls_to_db
+
+count = process_urls_to_db("config.yaml")
+print(f"Processed {count} URLs to database")
+```
+
+This module is perfect for batch importing URLs from various sources (emails, documents, web pages) into the job processing pipeline, especially when URLs contain tracking parameters or referral codes.
+
+---
+
 ## 🧰 Requirements
 
 * Python 3.12.3 or higher
@@ -387,6 +446,14 @@ py-scripts/
 │   ├── __init__.py
 │   ├── __main__.py
 │   ├── yaml_setter.py
+│   └── README.md
+│
+├── url_to_db/   # Extract URLs from source and save to DB
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── cli.py
+│   ├── core.py
+│   ├── config.example.yml
 │   └── README.md
 │
 ├── .gitignore
