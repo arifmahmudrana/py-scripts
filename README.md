@@ -235,6 +235,11 @@ output_image_path: "./output/images/composited_page1.png"
 output_pdf_path: "./output/final.pdf"
 # Directory to save generated images (created if missing)
 image_output_dir: "./output/images"
+
+# Optional: resize overlay image before placing (width x height in pixels)
+overlay_size:
+  width: 320
+  height: 180
 dpi: 150
 ```
 

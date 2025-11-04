@@ -29,6 +29,11 @@ page_number: 1
 x: 100
 y: 150
 
+# Optional: resize overlay image before placing (width x height in pixels)
+overlay_size:
+  width: 320
+  height: 180
+
 # Where to save the composited PNG image
 output_image_path: "./output/images/composited_page1.png"
 
@@ -63,6 +68,7 @@ This will:
 - Simple YAML configuration
 - Renders PDF pages via PyMuPDF (no external system dependencies like poppler)
 - Alpha-aware compositing with Pillow
+- Optional overlay resizing using high-quality LANCZOS resampling
 - Writes back into a PDF and saves to a configurable output path
 - Usable as both a library and a CLI tool
 

@@ -11,14 +11,14 @@ Dependencies: PyMuPDF (fitz), Pillow (PIL), PyYAML
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Tuple
+from typing import Optional, Tuple
 
 import fitz  # PyMuPDF
-from PIL import Image
 import yaml
-import os
+from PIL import Image
 
 
 @dataclass
@@ -32,6 +32,8 @@ class OverlayConfig:
     output_pdf_path: str
     image_output_dir: str
     dpi: int = 150
+    overlay_width: Optional[int] = None
+    overlay_height: Optional[int] = None
 
 
 def load_config(config_path: str) -> OverlayConfig:
@@ -56,10 +58,32 @@ def load_config(config_path: str) -> OverlayConfig:
         output_pdf_path=data.get("output_pdf_path", "output/output.pdf"),
         image_output_dir=data.get("image_output_dir", "output/images"),
         dpi=int(data.get("dpi", 150)),
+        overlay_width=(
+            int(data.get("overlay_size", {}).get("width"))
+            if isinstance(data.get("overlay_size"), dict)
+            and data.get("overlay_size").get("width") is not None
+            else (
+                int(data.get("overlay_width"))
+                if data.get("overlay_width") is not None
+                else None
+            )
+        ),
+        overlay_height=(
+            int(data.get("overlay_size", {}).get("height"))
+            if isinstance(data.get("overlay_size"), dict)
+            and data.get("overlay_size").get("height") is not None
+            else (
+                int(data.get("overlay_height"))
+                if data.get("overlay_height") is not None
+                else None
+            )
+        ),
     )
 
 
-def render_pdf_page_to_image(pdf_path: str, page_number_1_based: int, dpi: int = 150) -> Image.Image:
+def render_pdf_page_to_image(
+    pdf_path: str, page_number_1_based: int, dpi: int = 150
+) -> Image.Image:
     """Render a specific PDF page to a PIL Image using PyMuPDF.
 
     Args:
@@ -89,7 +113,12 @@ def render_pdf_page_to_image(pdf_path: str, page_number_1_based: int, dpi: int =
         return img.convert("RGBA")
 
 
-def overlay_image_on_base(base_image: Image.Image, overlay_path: str, position_xy: Tuple[int, int]) -> Image.Image:
+def overlay_image_on_base(
+    base_image: Image.Image,
+    overlay_path: str,
+    position_xy: Tuple[int, int],
+    resize_to: Optional[Tuple[int, int]] = None,
+) -> Image.Image:
     """Overlay an image onto a base image at the given (x, y) coordinates.
 
     Args:
@@ -102,6 +131,9 @@ def overlay_image_on_base(base_image: Image.Image, overlay_path: str, position_x
     """
     base_rgba = base_image.convert("RGBA")
     overlay_rgba = Image.open(overlay_path).convert("RGBA")
+    if resize_to is not None:
+        # High-quality down/up-sampling
+        overlay_rgba = overlay_rgba.resize(resize_to, Image.Resampling.LANCZOS)
 
     x, y = position_xy
     canvas = Image.new("RGBA", base_rgba.size)
@@ -137,7 +169,16 @@ def process_overlay_from_config(config_path: str) -> str:
     base_img.save(base_out)
 
     # Composite overlay
-    composited = overlay_image_on_base(base_img, cfg.overlay_image_path, (cfg.x, cfg.y))
+    resize_dims: Optional[Tuple[int, int]] = None
+    if cfg.overlay_width is not None and cfg.overlay_height is not None:
+        resize_dims = (cfg.overlay_width, cfg.overlay_height)
+
+    composited = overlay_image_on_base(
+        base_img,
+        cfg.overlay_image_path,
+        (cfg.x, cfg.y),
+        resize_to=resize_dims,
+    )
 
     # Save composited image
     composited.save(cfg.output_image_path)
@@ -166,5 +207,3 @@ def process_overlay_from_config(config_path: str) -> str:
         out_doc.close()
 
     return cfg.output_pdf_path
-
-

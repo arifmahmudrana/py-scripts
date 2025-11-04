@@ -65,6 +65,9 @@ file_merger/*.txt
 file_merger_batch/files/*
 !file_merger_batch/files/.gitkeep
 
+pdf_image_overlay/files/*
+!pdf_image_overlay/files/.gitkeep
+
 **/*.y*ml
 !**/config.example.y*ml
 
