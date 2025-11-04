@@ -216,6 +216,33 @@ This will:
 
 ---
 
+### 🖼️📄 [`pdf_image_overlay`](./pdf_image_overlay)
+
+Render a PDF page to an image and overlay another image at specified coordinates.  
+🔗 [Project Documentation](./pdf_image_overlay/README.md)
+
+**Example config (`config.yaml`):**
+
+```yaml
+pdf_path: "./path/to/source.pdf"
+overlay_image_path: "./path/to/overlay.png"
+page_number: 1  # 1-based
+x: 100
+y: 150
+output_image_path: "./output/composited_page1.png"
+dpi: 150
+```
+
+**Usage:**
+
+```bash
+python -m pdf_image_overlay -c ./pdf_image_overlay/config.yaml
+```
+
+This will render the specified PDF page and place the overlay image at `(x, y)` on the rasterized page image, then save to `output_image_path`.
+
+---
+
 ### 🔗 [`url_extractor`](./url_extractor)
 Extract URLs from a file, filter by domain, and save results into a file. Supports removing duplicate with original order.  
 🔗 [Project Documentation](./url_extractor/README.md)
@@ -432,6 +459,13 @@ py-scripts/
 │   ├── __main__.py
 │   ├── batch_merger.py
 │   ├── config.example.yml
+│   └── README.md
+│
+├── pdf_image_overlay/   # Render PDF page and overlay an image
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── overlay.py
+│   ├── config.example.yaml
 │   └── README.md
 │
 ├── url_extractor/   # Extract URLs from file

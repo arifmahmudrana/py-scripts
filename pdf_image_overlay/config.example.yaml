@@ -1,0 +1,11 @@
+pdf_path: "./path/to/source.pdf"
+overlay_image_path: "./path/to/overlay.png"
+# 1-based page index
+page_number: 1
+# Top-left placement coordinates (in pixels on the rendered image)
+x: 100
+y: 150
+output_image_path: "./output/composited_page1.png"
+# Optional DPI for rendering the PDF page (affects image size)
+dpi: 150
+
