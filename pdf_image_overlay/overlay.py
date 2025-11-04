@@ -18,6 +18,7 @@ from typing import Tuple
 import fitz  # PyMuPDF
 from PIL import Image
 import yaml
+import os
 
 
 @dataclass
@@ -28,6 +29,8 @@ class OverlayConfig:
     x: int
     y: int
     output_image_path: str
+    output_pdf_path: str
+    image_output_dir: str
     dpi: int = 150
 
 
@@ -49,7 +52,9 @@ def load_config(config_path: str) -> OverlayConfig:
         page_number=int(data["page_number"]),
         x=int(data["x"]),
         y=int(data["y"]),
-        output_image_path=data.get("output_image_path", "output.png"),
+        output_image_path=data.get("output_image_path", "output/output.png"),
+        output_pdf_path=data.get("output_pdf_path", "output/output.pdf"),
+        image_output_dir=data.get("image_output_dir", "output/images"),
         dpi=int(data.get("dpi", 150)),
     )
 
@@ -115,10 +120,51 @@ def process_overlay_from_config(config_path: str) -> str:
         Path to saved output image.
     """
     cfg = load_config(config_path)
+
+    # Ensure output directories exist
+    os.makedirs(os.path.dirname(cfg.output_image_path) or ".", exist_ok=True)
+    os.makedirs(os.path.dirname(cfg.output_pdf_path) or ".", exist_ok=True)
+    os.makedirs(cfg.image_output_dir or ".", exist_ok=True)
+
+    # Render base page to image
     base_img = render_pdf_page_to_image(cfg.pdf_path, cfg.page_number, dpi=cfg.dpi)
+
+    # Save base render in the image output directory (for debugging/reference)
+    base_out = os.path.join(
+        cfg.image_output_dir,
+        f"page_{cfg.page_number}_base.png",
+    )
+    base_img.save(base_out)
+
+    # Composite overlay
     composited = overlay_image_on_base(base_img, cfg.overlay_image_path, (cfg.x, cfg.y))
-    # Save as PNG to preserve transparency if present; use output extension as-is
+
+    # Save composited image
     composited.save(cfg.output_image_path)
-    return cfg.output_image_path
+
+    # Also save composited image in image dir
+    comp_out = os.path.join(
+        cfg.image_output_dir,
+        f"page_{cfg.page_number}_composited.png",
+    )
+    composited.save(comp_out)
+
+    # Write back to PDF by placing the composited image on top of the target page
+    png_bytes = BytesIO()
+    composited.convert("RGBA").save(png_bytes, format="PNG")
+    png_data = png_bytes.getvalue()
+
+    with fitz.open(cfg.pdf_path) as in_doc:
+        # Create a new document and copy pages
+        out_doc = fitz.open()
+        out_doc.insert_pdf(in_doc)  # copies all pages
+        page = out_doc[cfg.page_number - 1]
+        page_rect = page.rect
+        # Cover full page with the composited image
+        page.insert_image(page_rect, stream=png_data)
+        out_doc.save(cfg.output_pdf_path)
+        out_doc.close()
+
+    return cfg.output_pdf_path
 
 

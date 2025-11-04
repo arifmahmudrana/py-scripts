@@ -218,7 +218,7 @@ This will:
 
 ### 🖼️📄 [`pdf_image_overlay`](./pdf_image_overlay)
 
-Render a PDF page to an image and overlay another image at specified coordinates.  
+Render a PDF page to an image, overlay another image at specified coordinates, and write the result back to a PDF.  
 🔗 [Project Documentation](./pdf_image_overlay/README.md)
 
 **Example config (`config.yaml`):**
@@ -229,7 +229,12 @@ overlay_image_path: "./path/to/overlay.png"
 page_number: 1  # 1-based
 x: 100
 y: 150
-output_image_path: "./output/composited_page1.png"
+# Save composited image here
+output_image_path: "./output/images/composited_page1.png"
+# Save final PDF here
+output_pdf_path: "./output/final.pdf"
+# Directory to save generated images (created if missing)
+image_output_dir: "./output/images"
 dpi: 150
 ```
 
@@ -239,7 +244,7 @@ dpi: 150
 python -m pdf_image_overlay -c ./pdf_image_overlay/config.yaml
 ```
 
-This will render the specified PDF page and place the overlay image at `(x, y)` on the rasterized page image, then save to `output_image_path`.
+This will render the specified PDF page, place the overlay image at `(x, y)`, save the composited PNG, and write the composited page back into a PDF at `output_pdf_path`. Missing directories are created automatically.
 
 ---
 

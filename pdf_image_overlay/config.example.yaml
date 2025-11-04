@@ -5,7 +5,16 @@ page_number: 1
 # Top-left placement coordinates (in pixels on the rendered image)
 x: 100
 y: 150
-output_image_path: "./output/composited_page1.png"
+
+# Where to save the composited PNG image
+output_image_path: "./output/images/composited_page1.png"
+
+# Where to save the final output PDF (with the composited image applied to the page)
+output_pdf_path: "./output/final.pdf"
+
+# Directory to store generated images (base render + composited copies)
+image_output_dir: "./output/images"
+
 # Optional DPI for rendering the PDF page (affects image size)
 dpi: 150
 
